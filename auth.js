@@ -6,8 +6,7 @@ const pool = require('../db/pool');
 const router = express.Router();
 const SECRET = process.env.JWT_SECRET || 'smarterp_dev_secret';
 
-// POST /api/auth/register  (creates an admin account - in production an existing
-// admin would create user accounts; self-registration is provided for first-run setup)
+
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -30,7 +29,6 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// POST /api/auth/login
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
