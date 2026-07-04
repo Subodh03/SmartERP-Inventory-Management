@@ -1,6 +1,5 @@
 const pool = require('../db/pool');
 
-
 const DEFAULT_GROUPS = [
   { name: 'Fixed Assets', nature: 'Assets' },
   { name: 'Current Assets', nature: 'Assets' },
