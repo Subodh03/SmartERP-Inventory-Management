@@ -17,7 +17,6 @@ async function assertOwnership(req, res) {
   return companyId;
 }
 
-/* ---------------- GROUPS ---------------- */
 router.get('/groups', async (req, res) => {
   const companyId = await assertOwnership(req, res); if (!companyId) return;
   const { rows } = await pool.query('SELECT * FROM groups WHERE company_id=$1 ORDER BY nature, name', [companyId]);
@@ -43,7 +42,7 @@ router.delete('/groups/:id', async (req, res) => {
   res.json({ success: true });
 });
 
-/* ---------------- LEDGERS ---------------- */
+
 router.get('/ledgers', async (req, res) => {
   const companyId = await assertOwnership(req, res); if (!companyId) return;
   const { type } = req.query;
@@ -101,7 +100,7 @@ router.delete('/ledgers/:id', async (req, res) => {
   res.json({ success: true });
 });
 
-/* ---------------- UNITS ---------------- */
+
 router.get('/units', async (req, res) => {
   const companyId = await assertOwnership(req, res); if (!companyId) return;
   const { rows } = await pool.query('SELECT * FROM units WHERE company_id=$1 ORDER BY symbol', [companyId]);
@@ -126,7 +125,7 @@ router.delete('/units/:id', async (req, res) => {
   res.json({ success: true });
 });
 
-/* ---------------- STOCK GROUPS ---------------- */
+
 router.get('/stock-groups', async (req, res) => {
   const companyId = await assertOwnership(req, res); if (!companyId) return;
   const { rows } = await pool.query('SELECT * FROM stock_groups WHERE company_id=$1 ORDER BY name', [companyId]);
@@ -145,7 +144,7 @@ router.post('/stock-groups', async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-/* ---------------- STOCK ITEMS ---------------- */
+
 router.get('/stock-items', async (req, res) => {
   const companyId = await assertOwnership(req, res); if (!companyId) return;
   const { rows } = await pool.query(
@@ -191,7 +190,7 @@ router.delete('/stock-items/:id', async (req, res) => {
   res.json({ success: true });
 });
 
-// Stock In / Out / Transfer / Adjustment
+
 router.post('/stock-items/:id/movement', async (req, res) => {
   const companyId = await assertOwnership(req, res); if (!companyId) return;
   try {
