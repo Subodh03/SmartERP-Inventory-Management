@@ -23,7 +23,7 @@ async function nextInvoiceNo(companyId, docType) {
   return `${prefix}/${year}/${String(n).padStart(4, '0')}`;
 }
 
-// GET /api/invoices?company_id=&doc_type=
+
 router.get('/', async (req, res) => {
   const { company_id, doc_type } = req.query;
   if (!company_id) return res.status(400).json({ error: 'company_id is required' });
@@ -36,8 +36,6 @@ router.get('/', async (req, res) => {
   const { rows } = await pool.query(sql, params);
   res.json(rows);
 });
-
-// GET /api/invoices/:id  (full detail incl. line items, used for view/print/PDF)
 router.get('/:id', async (req, res) => {
   const { company_id } = req.query;
   if (!(await assertOwnership(company_id, req.user.id, res))) return;
@@ -55,8 +53,7 @@ router.get('/:id', async (req, res) => {
   res.json({ ...inv.rows[0], items: items.rows, company: company.rows[0] });
 });
 
-// POST /api/invoices
-// body: { company_id, doc_type, invoice_date, party_ledger_id, items: [{stock_item_id, description, quantity, rate, gst_percent}] }
+
 router.post('/', async (req, res) => {
   const client = await pool.connect();
   try {
@@ -97,7 +94,7 @@ router.post('/', async (req, res) => {
          VALUES ($1,$2,$3,$4,$5,$6,$7)`,
         [invoice.id, it.stock_item_id || null, it.description || null, it.qty, it.rate, it.gstPct, it.amount]
       );
-      // Only firm documents move stock, not Quotation/Estimate/Proforma
+      
       if (it.stock_item_id && doc_type === 'gst_invoice') {
         await client.query('UPDATE stock_items SET quantity = quantity - $1 WHERE id=$2', [it.qty, it.stock_item_id]);
         await client.query(
@@ -114,7 +111,7 @@ router.post('/', async (req, res) => {
       }
     }
 
-    // Post real double-entry so the books (Trial Balance, P&L, Balance Sheet) stay balanced.
+  
     if (doc_type === 'gst_invoice') {
       const salesLedgerId = await getOrCreateLedger(company_id, 'Sales Account', 'Sales Accounts', 'Income', 'income');
       const gstLedgerId = gstAmount > 0
@@ -144,8 +141,7 @@ router.post('/', async (req, res) => {
       if (gstLedgerId) await client.query(`INSERT INTO voucher_entries (voucher_id,ledger_id,entry_type,amount) VALUES ($1,$2,'Dr',$3)`, [journalId, gstLedgerId, gstAmount]);
       await client.query(`INSERT INTO voucher_entries (voucher_id,ledger_id,entry_type,amount) VALUES ($1,$2,'Cr',$3)`, [journalId, party_ledger_id, total]);
     }
-    // Proforma / Quotation / Estimate are non-financial documents and intentionally do not post to the ledgers.
-
+    
     await client.query('COMMIT');
     res.status(201).json(invoice);
   } catch (err) {
@@ -156,7 +152,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/invoices/:id/pdf?company_id=  - streams a printable/downloadable PDF
+
 router.get('/:id/pdf', async (req, res) => {
   try {
     const { company_id } = req.query;
