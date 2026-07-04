@@ -1,6 +1,5 @@
 const ExcelJS = require('exceljs');
 
-// columns: [{ header, key, width }], rows: array of plain objects
 async function streamExcel(res, filename, sheetName, columns, rows) {
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet(sheetName);
