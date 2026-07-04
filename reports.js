@@ -13,7 +13,6 @@ async function assertOwnership(companyId, userId, res) {
   return true;
 }
 
-/* =================== FINANCIAL REPORTS =================== */
 
 // Trial Balance: every ledger with its Dr/Cr closing balance
 router.get('/trial-balance', async (req, res) => {
@@ -32,7 +31,7 @@ router.get('/trial-balance', async (req, res) => {
   res.json({ ledgers: balances, total_debit: totalDebit, total_credit: totalCredit });
 });
 
-// Profit & Loss: Income vs Expenses grouped by nature
+
 router.get('/profit-loss', async (req, res) => {
   const { company_id } = req.query;
   if (!(await assertOwnership(company_id, req.user.id, res))) return;
@@ -44,7 +43,7 @@ router.get('/profit-loss', async (req, res) => {
   res.json({ income, expenses, total_income: totalIncome, total_expenses: totalExpenses, net_profit: totalIncome - totalExpenses });
 });
 
-// Balance Sheet: Assets vs Liabilities (+ retained profit balancing figure)
+
 router.get('/balance-sheet', async (req, res) => {
   const { company_id } = req.query;
   if (!(await assertOwnership(company_id, req.user.id, res))) return;
@@ -62,7 +61,7 @@ router.get('/balance-sheet', async (req, res) => {
   });
 });
 
-// Cash Flow Statement (simplified): inflow/outflow through Cash & Bank ledgers, by voucher type
+
 router.get('/cash-flow', async (req, res) => {
   const { company_id } = req.query;
   if (!(await assertOwnership(company_id, req.user.id, res))) return;
@@ -80,7 +79,7 @@ router.get('/cash-flow', async (req, res) => {
   res.json({ breakdown: rows, total_inflow: inflow, total_outflow: outflow, net_cash_flow: inflow - outflow });
 });
 
-/* =================== INVENTORY REPORTS =================== */
+
 
 router.get('/stock-summary', async (req, res) => {
   const { company_id, format } = req.query;
@@ -125,7 +124,6 @@ router.get('/item-movement', async (req, res) => {
   res.json(rows);
 });
 
-/* =================== SALES REPORTS =================== */
 
 router.get('/sales-daily', async (req, res) => {
   const { company_id, date } = req.query;
@@ -162,7 +160,6 @@ router.get('/top-customers', async (req, res) => {
   res.json(rows);
 });
 
-/* =================== PURCHASE REPORTS =================== */
 
 router.get('/purchase-register', async (req, res) => {
   const { company_id, format } = req.query;
