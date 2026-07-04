@@ -21,7 +21,7 @@ async function getOrCreateGroup(companyId, name, nature) {
   return created.rows[0].id;
 }
 
-/* ============== CUSTOMERS ============== */
+
 router.get('/customers', async (req, res) => {
   const { company_id } = req.query;
   if (!(await assertOwnership(company_id, req.user.id, res))) return;
@@ -65,7 +65,7 @@ router.delete('/customers/:id', async (req, res) => {
   res.json({ success: true });
 });
 
-// Customer ledger / statement: all invoices + voucher entries chronologically
+
 router.get('/customers/:id/statement', async (req, res) => {
   const { company_id } = req.query;
   if (!(await assertOwnership(company_id, req.user.id, res))) return;
@@ -84,7 +84,6 @@ router.get('/customers/:id/statement', async (req, res) => {
   res.json(rows);
 });
 
-/* ============== SUPPLIERS ============== */
 router.get('/suppliers', async (req, res) => {
   const { company_id } = req.query;
   if (!(await assertOwnership(company_id, req.user.id, res))) return;
