@@ -1,7 +1,6 @@
 const pool = require('../db/pool');
 
-// Finds an existing ledger by name within a company, or creates it under the given group
-// (creating the group too if needed). Used to auto-post Sales/Purchase/GST control ledgers.
+
 async function getOrCreateLedger(companyId, ledgerName, groupName, nature, ledgerType = 'general') {
   const existing = await pool.query('SELECT id FROM ledgers WHERE company_id=$1 AND name=$2', [companyId, ledgerName]);
   if (existing.rows.length) return existing.rows[0].id;
@@ -25,9 +24,7 @@ async function getOrCreateLedger(companyId, ledgerName, groupName, nature, ledge
   return ledger.rows[0].id;
 }
 
-// Returns the net balance of a ledger in "Dr-positive" convention:
-// positive => the ledger carries a debit balance (e.g. a customer who owes money)
-// negative => the ledger carries a credit balance (e.g. a supplier we owe money to)
+
 async function ledgerBalance(ledgerId) {
   const { rows } = await pool.query(
     `SELECT
@@ -43,7 +40,7 @@ async function ledgerBalance(ledgerId) {
   return opening + Number(r.dr_vouchers) - Number(r.cr_vouchers);
 }
 
-// Batch version for many ledgers at once (used in Trial Balance / reports to avoid N+1 queries)
+
 async function allLedgerBalances(companyId) {
   const { rows } = await pool.query(
     `SELECT
