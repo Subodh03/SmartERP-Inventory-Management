@@ -8,7 +8,7 @@ const DOC_LABELS = {
   purchase: 'PURCHASE BILL',
 };
 
-// Streams a generated invoice PDF directly into the given res object.
+
 function renderInvoicePdf(res, invoice) {
   const doc = new PDFDocument({ margin: 40, size: 'A4' });
   res.setHeader('Content-Type', 'application/pdf');
@@ -17,7 +17,7 @@ function renderInvoicePdf(res, invoice) {
 
   const label = DOC_LABELS[invoice.doc_type] || 'DOCUMENT';
 
-  // Header
+  
   doc.fontSize(18).fillColor('#0A1628').text(invoice.company.name, { continued: false });
   doc.fontSize(9).fillColor('#444');
   if (invoice.company.address) doc.text(invoice.company.address);
@@ -34,7 +34,7 @@ function renderInvoicePdf(res, invoice) {
   doc.moveTo(40, doc.y).lineTo(555, doc.y).strokeColor('#cccccc').stroke();
   doc.moveDown(0.5);
 
-  // Party details
+  
   doc.fontSize(10).fillColor('#0A1628').text('Bill To:', { underline: true });
   doc.fontSize(10).fillColor('#222').text(invoice.party_name);
   if (invoice.party_address) doc.text(invoice.party_address);
@@ -42,8 +42,6 @@ function renderInvoicePdf(res, invoice) {
   if (invoice.party_mobile) doc.text(`Mobile: ${invoice.party_mobile}`);
 
   doc.moveDown(1);
-
-  // Table header
   const tableTop = doc.y;
   const cols = { sn: 40, desc: 75, qty: 290, rate: 350, gst: 420, amount: 480 };
   doc.fontSize(9).fillColor('#fff');
