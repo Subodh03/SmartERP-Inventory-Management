@@ -20,7 +20,7 @@ async function nextVoucherNo(companyId, voucherType) {
   return `${prefix}-${String(n).padStart(4, '0')}`;
 }
 
-// GET /api/vouchers?company_id=&voucher_type=
+
 router.get('/', async (req, res) => {
   const { company_id, voucher_type } = req.query;
   if (!company_id) return res.status(400).json({ error: 'company_id is required' });
@@ -37,10 +37,7 @@ router.get('/', async (req, res) => {
   res.json(rows);
 });
 
-// POST /api/vouchers
-// body: { company_id, voucher_type: contra|payment|receipt|journal, voucher_date, narration,
-//         debit_ledger_id, credit_ledger_id, amount }
-// (Simple two-leg voucher entry, matching Tally's everyday Payment/Receipt/Contra flow.)
+
 router.post('/', async (req, res) => {
   const client = await pool.connect();
   try {
