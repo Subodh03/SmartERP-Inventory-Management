@@ -8,13 +8,10 @@ router.use(requireAuth);
 
 const MAX_COMPANIES = 5;
 
-// GET /api/companies - list companies owned by the logged-in user
 router.get('/', async (req, res) => {
   const { rows } = await pool.query('SELECT * FROM companies WHERE owner_id=$1 ORDER BY id', [req.user.id]);
   res.json(rows);
 });
-
-// POST /api/companies - create (max 5 per account)
 router.post('/', async (req, res) => {
   try {
     const { rows: existing } = await pool.query('SELECT COUNT(*) FROM companies WHERE owner_id=$1', [req.user.id]);
@@ -39,7 +36,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/companies/:id - alter company info
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -59,7 +55,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE /api/companies/:id
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
